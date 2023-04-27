@@ -17,6 +17,27 @@ resource "azurerm_sql_database" "sql_db" {
   collation           = var.dbcollation
   max_size_gb         = var.size
 }
+# Create a Private DNS Zone
+resource "azurerm_private_dns_zone" "sql_dns_zone" {
+  name                = "iconsqldb.local"
+  resource_group_name = var.rgname
+  zone_type           = "Private"
+}
+
+# Link the Private DNS Zone with the VNET
+resource "azurerm_private_dns_zone_virtual_network_link" "sql-private-dns-link" {
+  name = "redis-vnet-link"
+  resource_group_name = var.rgname
+  private_dns_zone_name = azurerm_private_dns_zone.sql-dns.name
+  virtual_network_id = azurerm_virtual_network.vnet.id
+}
+
+# Create a DB Private DNS Zone
+resource "azurerm_private_dns_zone" "sql-endpoint-dns-private-zone" {
+  name = "privatelink.database.windows.net"
+  resource_group_name = var.rgname
+}
+
 
 resource "azurerm_private_endpoint" "sql_endpoint" {
   depends_on          = [azurerm_sql_server.sql_server]  
@@ -36,14 +57,11 @@ resource "azurerm_private_endpoint" "sql_endpoint" {
     private_dns_zone_id = azurerm_private_dns_zone.sql_dns_zone.id
   }
 }
+# DB Private Endpoint Connecton
 resource "azurerm_private_endpoint_connection" "sql_connection" {
   depends_on          = [azurerm_private_endpoint.sql_endpoint]  
   name                = "icon-sql-connection"
   resource_group_name = var.rgname
-  private_endpoint_id = azurerm_private_endpoint.sql_endpoint.id
-  remote_resource_id  = azurerm_app_service.app_service.id
-  is_manual_connection = true
-  subresource_names   = ["sql"]
 }
 resource "azurerm_private_dns_a_record" "sql_a_record" {
   depends_on          = [azurerm_sql_server.sql_server]  

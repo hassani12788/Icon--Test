@@ -6,6 +6,23 @@ resource "redis_cache" "cache" {
   capacity            = var.rediscapacity
 }
 
+# Create a Private DNS Zone
+resource "azurerm_private_dns_zone" "redis_dns_zone" {
+  name                = "redis.local"
+  resource_group_name = var.rgname
+  zone_type           = "Private"
+}
+
+# Link the Private DNS Zone with the VNET
+resource "azurerm_private_dns_zone_virtual_network_link" "redis-private-dns-link" {
+  name = "redis-vnet-link"
+  resource_group_name = var.rgname
+  private_dns_zone_name = azurerm_private_dns_zone.redis-dns.name
+  virtual_network_id = azurerm_virtual_network.vnet.id
+}
+
+
+
 resource "azurerm_private_endpoint" "redis_endpoint" {
   depends_on          = [redis_cache.cache]  
   name                = "icon-redis-endpoint"
@@ -38,5 +55,5 @@ resource "azurerm_private_dns_a_record" "redis_a_record" {
   zone_name           = azurerm_private_dns_zone.redis_dns_zone.name
   resource_group_name = var.rgname
   ttl                 = 300
-  records             = [azurerm_redis_cache.redis_cache.static_ip_address]
+  records             = [aazurerm_private_endpoint.redis_endpoint.static_ip_address]
 }

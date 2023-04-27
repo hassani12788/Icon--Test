@@ -24,8 +24,8 @@ resource "azurerm_app_service" "app_service" {
   name                = azurerm_app_service.app_service.name
   resource_group_name = var.rgname
   app_settings = {
-    "RedisConnectionString": "myredis.redis.cache.local:6380,(connection string)"
-    "SqlConnectionString": "Server=mysqldb.database.local,1433;(connection String)"
+    "RedisConnectionString": "server=${azurerm_private_endpoint.redis_endpoint.private_service_connection[0].private.ip:6380,(connection string)}"
+    "SqlConnectionString": "server=${azurerm_private_endpoint.sql_endpoint.private_service_connection[0].private.ip,1433;(connection String)}"
     "WEBSITE_PRIVATE_ENDPOINT_ARM_ID" = azurerm_private_endpoint.my_endpoint.id
     "WEBSITE_PRIVATE_DNS_ZONE_NAME" = azurerm_private_dns_zone.my_dns_zone.name
     "STORAGE_ACCOUNT_NAME"        = azurerm_storage_account.storage_account.name
@@ -34,22 +34,8 @@ resource "azurerm_app_service" "app_service" {
  } 
 }
 
-resource "azurerm_private_endpoint" "app_service_endpoint" {
-  depends_on          = [azurerm_app_service.app_service]  
-  name                = "icon-app-service-endpoint"
-  location            = var.location
-  resource_group_name = var.rgname
-  subnet_id           = azurerm_subnet.app_subnet.id
-
-  private_service_connection {
-    name                           = "app-service-connection"
-    private_connection_resource_id = azurerm_app_service.app_service.id
-    is_manual_connection           = true
-    subresource_names              = ["scm"]
-  }
-
-  dns_zone_group {
-    name            = "app-service-dns-zone-group"
-    private_dns_zone_id = azurerm_private_dns_zone.app_dns_zone.id
-  }
+resource "azurerm_app_service_virtual_network_swift_connection" "appservice-vnet-con" {
+  app_service_id = azurerm_app_service.app_service.id
+  subnet_id      = azurerm_subnet.app_subnet.id
 }
+
