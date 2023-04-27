@@ -20,9 +20,13 @@ address_prefixe_vm    = "10.0.5.0/24"
 
 #Virtual Machine Variables
 
-vmsize       =  ""
+vmsize       =  "Standard_D3_v2"
 vmuser       =  ""
 vmpassword   =  ""
+vmnicname    =  "Icon-Prod-VM-Nic"
+vmname       =  "Icon-Prod-VM"
+osdiskname   =  "icon-prod-osDisk"
+computername =  "Icon-Prod-Comp"
 
 #App Service Variables
 
@@ -41,3 +45,7 @@ dbedition      =  "Standard"
 dbcollation    =  "SQL_Latin1_General_CP1_CI_AS"
 dbsize         =  1
 
+# Storage Account Variables
+
+storageaccountname     =  "iconprodstorageaccount"
+blobcontainer          =  "prodblob"

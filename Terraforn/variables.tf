@@ -66,63 +66,94 @@ variable "address_prefixe_vm" {
 }
 
 ##Virtual Machine ENV
+
+variable "osdiskname" {
+  type        = string
+  description = "Name of the OS Disk"
+}
+variable "vmname" {
+  type        = string
+  description = "Virtual Machine Name"
+}
+
+variable "vmnicname" {
+  type        = string
+  description = "Network Interface Card Name"
+}
+
+variable "computername" {
+  type        = string
+  description = "Computer Name"
+}
+
 variable "vmsize" {
   type        = string
-  description = "Network Subnet Address Prefix"
+  description = "Virtual Machine Size"
 }
 
 variable "vmuser" {
   type        = string
-  description = "Network Subnet Address Prefix"
+  description = "Virtual Machine username"
 }
 
 variable "vmpassword" {
   type        = string
-  description = "Network Subnet Address Prefix"
+  description = "Virtual Machine password"
 }
 
 ##App service ENV
 variable "appsku" {
   type        = string
-  description = "Network Subnet Address Prefix"
+  description = "Azure Web App Sku"
 }
 
 variable "appsize" {
   type        = string
-  description = "Network Subnet Address Prefix"
+  description = "Azue Web App size"
 }
 
 # Azure Caches For Redis ENV
 
 variable "redissku" {
   type        = string
-  description = "Network Subnet Address Prefix"
+  description = "Redis Cache SKU"
 }
 
 variable "rediscapacity" {
   type        = string
-  description = "Network Subnet Address Prefix"
+  description = "Capacity of Redis Cache"
 }
 # Azure SQL ENV
 
 variable "dbname" {
   type        = string
-  description = "Network Subnet Address Prefix"
+  description = "database name"
 }
 variable "dbedition" {
   type        = string
-  description = "Network Subnet Address Prefix"
+  description = "database Edition "
 }
 
 variable "dbcollation" {
   type        = string
-  description = "Network Subnet Address Prefix"
+  description = "Database SKU"
 }
 
 variable "dbsize" {
   type        = string
-  description = "Network Subnet Address Prefix"
+  description = "Database Size in Gb"
 }
 
+# Storage Account Variables
 
+
+variable "storageaccountname" {
+  type        = string
+  description = "Storage account name"
+}
+
+variable "var.blobcontainer" {
+  type        = string
+  description = "Blob Container Name"
+}
 

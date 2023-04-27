@@ -1,3 +1,4 @@
+# Create Azure SQL server
 resource "azurerm_sql_server" "sql_server" {
   name                = "icon-sql-server"
   resource_group_name = var.rgname
@@ -8,6 +9,7 @@ resource "azurerm_sql_server" "sql_server" {
   administrator_login_password = var.sqlpassword
 }
 
+# Create SQL DB
 resource "azurerm_sql_database" "sql_db" {
   name                = var.dbname
   resource_group_name = var.rgname
@@ -19,14 +21,14 @@ resource "azurerm_sql_database" "sql_db" {
 }
 # Create a Private DNS Zone
 resource "azurerm_private_dns_zone" "sql_dns_zone" {
-  name                = "iconsqldb.local"
+  name                = "sqldb.local"
   resource_group_name = var.rgname
   zone_type           = "Private"
 }
 
 # Link the Private DNS Zone with the VNET
 resource "azurerm_private_dns_zone_virtual_network_link" "sql-private-dns-link" {
-  name = "redis-vnet-link"
+  name = "icon-redis-vnet-link"
   resource_group_name = var.rgname
   private_dns_zone_name = azurerm_private_dns_zone.sql-dns.name
   virtual_network_id = azurerm_virtual_network.vnet.id
@@ -38,7 +40,7 @@ resource "azurerm_private_dns_zone" "sql-endpoint-dns-private-zone" {
   resource_group_name = var.rgname
 }
 
-
+#Create Private Endpoint
 resource "azurerm_private_endpoint" "sql_endpoint" {
   depends_on          = [azurerm_sql_server.sql_server]  
   name                = "icon-sql-endpoint"
@@ -47,13 +49,13 @@ resource "azurerm_private_endpoint" "sql_endpoint" {
   subnet_id           = azurerm_subnet.sql_subnet.id
 
   private_service_connection {
-    name                           = "sql-connection"
+    name                           = "icon-sql-connection"
     private_connection_resource_id = azurerm_sql_server.sql_server.id
     subresource_names              = ["database", azurerm_sql_database.sql_db.name]
   }
 
   dns_zone_group {
-    name            = "sql-dns-zone-group"
+    name            = "icon-sql-dns-zone-group"
     private_dns_zone_id = azurerm_private_dns_zone.sql_dns_zone.id
   }
 }
@@ -63,9 +65,11 @@ resource "azurerm_private_endpoint_connection" "sql_connection" {
   name                = "icon-sql-connection"
   resource_group_name = var.rgname
 }
+
+# Create DNS Record
 resource "azurerm_private_dns_a_record" "sql_a_record" {
   depends_on          = [azurerm_sql_server.sql_server]  
-  name                = "iconsqldb"
+  name                = "icon-sqldb-a"
   zone_name           = azurerm_private_dns_zone.sql_dns_zone.name
   resource_group_name = var.rgname
   ttl                 = 300

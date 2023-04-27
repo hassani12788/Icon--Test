@@ -1,3 +1,4 @@
+# Create App service Plan
 resource "azurerm_app_service_plan" "app_service_plan" {
   name                = "production-app-service-plan"
   resource_group_name = var.rgname
@@ -5,7 +6,7 @@ resource "azurerm_app_service_plan" "app_service_plan" {
   sku_tier            = var.appsku
   sku_size            = var.appsize
 }
-
+# Create App Service
 resource "azurerm_app_service" "app_service" {
   name                = "icon-app-service"
   resource_group_name = var.rgname
@@ -20,6 +21,7 @@ resource "azurerm_app_service" "app_service" {
     type = "SystemAssigned"
   }
 
+#App service application settings
   resource "azurerm_app_service_application_settings" "app_settings" {
   name                = azurerm_app_service.app_service.name
   resource_group_name = var.rgname
@@ -34,6 +36,7 @@ resource "azurerm_app_service" "app_service" {
  } 
 }
 
+# Virtual Network swift connection
 resource "azurerm_app_service_virtual_network_swift_connection" "appservice-vnet-con" {
   app_service_id = azurerm_app_service.app_service.id
   subnet_id      = azurerm_subnet.app_subnet.id

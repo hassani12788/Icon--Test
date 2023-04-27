@@ -1,3 +1,4 @@
+# Create Azire Cache for Redis
 resource "redis_cache" "cache" {
   name                = "icon-redis-cache"
   resource_group_name = var.rgname
@@ -22,7 +23,7 @@ resource "azurerm_private_dns_zone_virtual_network_link" "redis-private-dns-link
 }
 
 
-
+# Create Private Endpoint
 resource "azurerm_private_endpoint" "redis_endpoint" {
   depends_on          = [redis_cache.cache]  
   name                = "icon-redis-endpoint"
@@ -31,15 +32,18 @@ resource "azurerm_private_endpoint" "redis_endpoint" {
   subnet_id           = azurerm_subnet.redis_subnet.id
 
   private_service_connection {
-    name                           = "redis-connection"
+    name                           = "icon-redis-connection"
     private_connection_resource_id = redis_cache.cache.id
   }
 
   dns_zone_group {
-    name            = "redis-dns-zone-group"
+    name            = "icon-redis-dns-zone-group"
     private_dns_zone_id = azurerm_private_dns_zone.redis_dns_zone.id
   }
 }
+
+# Create Private Endpoint Connection
+
 resource "azurerm_private_endpoint_connection" "redis_connection" {
   depends_on          = [azurerm_private_endpoint.redis_endpoint]  
   name                = "icon-redis-connection"
@@ -49,9 +53,11 @@ resource "azurerm_private_endpoint_connection" "redis_connection" {
   is_manual_connection = true
   subresource_names   = ["redis"]
 }
+
+# Create DNS Record
 resource "azurerm_private_dns_a_record" "redis_a_record" {
   depends_on          = [redis_cache.cache]  
-  name                = "iconredis"
+  name                = "icon-redis-a"
   zone_name           = azurerm_private_dns_zone.redis_dns_zone.name
   resource_group_name = var.rgname
   ttl                 = 300
