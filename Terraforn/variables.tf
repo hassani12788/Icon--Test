@@ -152,8 +152,17 @@ variable "storageaccountname" {
   description = "Storage account name"
 }
 
-variable "var.blobcontainer" {
+variable "blobcontainer" {
   type        = string
   description = "Blob Container Name"
 }
-
+# TAGS
+variable "default_tags" {
+  type        = map(any)
+  description = "Resource Tags Map value"
+}
+# Auto Scale Group
+variable "autoscalename" {
+  type        = string
+  description = "Blob Container Name"
+}

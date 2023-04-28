@@ -5,6 +5,9 @@ resource "redis_cache" "cache" {
   location            = var.location
   sku                 = var.redissku
   capacity            = var.rediscapacity
+
+  tags = var.default_tags
+  
 }
 
 # Create a Private DNS Zone

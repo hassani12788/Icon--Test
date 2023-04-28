@@ -9,6 +9,7 @@ resource "azurerm_network_interface" "my_nic" {
     subnet_id                     = azurerm_subnet.vm_subnet.id
     private_ip_address_allocation = "Dynamic"
   }
+  tags = var.default_tags
 }
 
 # Create a virtual machine
@@ -52,6 +53,7 @@ resource "azurerm_windows_virtual_machine" "my_vm" {
       "New-NetFirewallRule -DisplayName 'Allow HTTP Traffic' -Direction Inbound -LocalPort 443 -Protocol TCP -Action Allow"
     ]
   }
+  tags = var.default_tags
 }
 # Create Private DNS Zone
 resource "azurerm_private_dns_zone" "vm-dns-zone" {

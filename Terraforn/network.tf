@@ -2,6 +2,8 @@
 resource "azurerm_resource_group" "resourcegroup" {
   name     = var.rgname
   location = var.location
+
+  tags = var.default_tags  
 }
 # Create Virtual Network
 resource "azurerm_virtual_network" "vnet" {
@@ -9,7 +11,8 @@ resource "azurerm_virtual_network" "vnet" {
   address_space       = [var.address_space]
   location            = var.location
   resource_group_name = var.rgname
-
+  tags = var.default_tags
+  
 }
 
 # Create Subnets

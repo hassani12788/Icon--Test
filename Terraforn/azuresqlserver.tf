@@ -7,6 +7,9 @@ resource "azurerm_sql_server" "sql_server" {
 
   administrator_login          = var.sqlusername
   administrator_login_password = var.sqlpassword
+
+  tags = var.default_tags
+
 }
 
 # Create SQL DB

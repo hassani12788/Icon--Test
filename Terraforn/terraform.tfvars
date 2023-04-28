@@ -49,3 +49,11 @@ dbsize         =  1
 
 storageaccountname     =  "iconprodstorageaccount"
 blobcontainer          =  "prodblob"
+
+#Tags
+default_tags = {
+  environment = "ICON-Production"
+}
+
+# Auto Scale Group
+autoscalename         = "Icon-Prod-autoscale group"

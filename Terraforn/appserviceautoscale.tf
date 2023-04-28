@@ -6,7 +6,7 @@ resource "azurerm_monitor_autoscale_setting" "my_autoscale_setting" {
   target_resource_id  = azurerm_app_service.app_service.id
 
   profile {
-    name = "icon-autoscale-profile"
+    name = var.autoscalename
 
     capacity {
       default = 2

@@ -19,6 +19,8 @@ resource "azurerm_app_service" "app_service" {
   
   identity {
     type = "SystemAssigned"
+
+  tags = var.default_tags  
   }
 
 #App service application settings
@@ -40,5 +42,7 @@ resource "azurerm_app_service" "app_service" {
 resource "azurerm_app_service_virtual_network_swift_connection" "appservice-vnet-con" {
   app_service_id = azurerm_app_service.app_service.id
   subnet_id      = azurerm_subnet.app_subnet.id
+
+  tags = var.default_tags
 }
 
